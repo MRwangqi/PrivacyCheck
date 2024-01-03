@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    compileOnly "com.android.tools.lint:lint-api:$lintVersion"
+    compileOnly "com.android.tools.lint:lint-checks:$lintVersion"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compileOnly 'com.google.code.gson:gson:2.10.1'
+}
+
+jar {
+    manifest {
+        attributes("Lint-Registry": "com.codelang.checks.LintIssueRegistry")
+    }
+}
+configurations {
+    lintJarOutput
+}
+
+dependencies {
+    lintJarOutput files(jar)
+}
+
+defaultTasks 'assemble'
