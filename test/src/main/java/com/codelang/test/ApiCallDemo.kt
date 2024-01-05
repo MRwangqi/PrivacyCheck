@@ -1,4 +1,4 @@
-package com.codelang.lintcheck
+package com.codelang.test
 
 import android.content.Context
 import android.telephony.TelephonyManager

@@ -14,4 +14,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "PrivacyCheck"
 include ':app'
+include ':test'
 includeBuild("./LintCheck")
+includeBuild("./ApkCheck")
+includeBuild("./DepCheck")
+
