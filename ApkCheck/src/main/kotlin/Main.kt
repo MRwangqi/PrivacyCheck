@@ -2,16 +2,16 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.jf.baksmali.Main
 import java.io.File
-import java.security.InvalidParameterException
 import java.lang.reflect.Type
+import java.security.InvalidParameterException
+import java.util.concurrent.CountDownLatch
+import kotlin.concurrent.thread
+
 
 // 打包命令 ./gradlew assemble
 // 产物输出：/build/distributions/xxx.tar
 // 产物 cli 执行: sh bin/xx.sh xxx.apk api.json
 fun main(args: Array<String>) {
-
-    args.forEach(::println)
-
     if (args.isEmpty()) {
         throw InvalidParameterException("未配置 apk 路径")
     }
@@ -39,34 +39,41 @@ fun main(args: Array<String>) {
     val apkDir = File("out/apk")
     apkDir.mkdirs()
     println("start unzip apk ....")
-    var costTime = System.currentTimeMillis() - startTime
-    print("unzip cost ${costTime}ms")
     UnzipUtils.unZipFiles(apkFile, apkDir.absolutePath)
+    var costTime = System.currentTimeMillis() - startTime
+    println("end unzip cost ${costTime}ms")
+
     // 2、 获取所有 .dex 后缀的文件
-    val dexList = apkDir.listFiles()?.filter { it.absolutePath.endsWith(".dex") }
-    println("end unzip ....")
     println("dex list:")
-    dexList?.map { it.absolutePath }?.forEach(::println)
+    val dexList = apkDir.listFiles()?.filter { it.absolutePath.endsWith(".dex") }?.toList()
+        ?.apply { println(map { it.absolutePath }) }
+
     // 3、 执行 baksmali 生成 smail 文件
     val smailDir = File("out/smail")
     smailDir.mkdirs()
     println("start baksmail...")
-    // todo 多线程优化
-    dexList?.forEach {
-        // java -jar baksmali-2.5.2.jar d -o dir classes.dex
-        Main.main(arrayOf("d", "-o", smailDir.absolutePath, it.absolutePath))
+    ThreadUtil.batchProcessList(dexList ?: arrayListOf()) {
+        it.forEach {
+            // java -jar baksmali-2.5.2.jar d -o dir classes.dex
+            Main.main(arrayOf("d", "-o", smailDir.absolutePath, it.absolutePath))
+        }
     }
-    println("end baksmali...")
     costTime = System.currentTimeMillis() - startTime
-    println("baksmali cost ${costTime}ms")
+    println("end baksmali cost ${costTime}ms")
     startTime = System.currentTimeMillis()
+
     // 4、读取 smail 文件
+    println("start smail...")
     val resultList = arrayListOf<ApiCallResult>()
     val files = arrayListOf<File>()
     dfsFile(smailDir, files)
-    files.forEach { checkApiCall(it,apiCallList, resultList) }
+    ThreadUtil.batchProcessList(files) {
+        it.forEach { f ->
+            checkApiCall(f, apiCallList, resultList)
+        }
+    }
     costTime = System.currentTimeMillis() - startTime
-    println("smali cost ${costTime}ms")
+    println("end smail cost ${costTime}ms")
 
     // result output
     val apiFile = File("out", "ApiCall.json")
@@ -76,7 +83,9 @@ fun main(args: Array<String>) {
     apiFile.createNewFile()
     val json = Gson().toJson(resultList)
     apiFile.writeBytes(json.toByteArray())
+    println("output file ${apiFile.absolutePath}")
 }
+
 
 private fun dfsFile(file: File, list: ArrayList<File>) {
     if (file.isDirectory) {
@@ -86,7 +95,7 @@ private fun dfsFile(file: File, list: ArrayList<File>) {
     }
 }
 
-private fun checkApiCall(file: File,apiCallList:List<ApiNode> ,resultList: ArrayList<ApiCallResult>) {
+private fun checkApiCall(file: File, apiCallList: List<ApiNode>, resultList: ArrayList<ApiCallResult>) {
     if (!file.absolutePath.endsWith(".smali")) {
         return
     }
@@ -96,12 +105,15 @@ private fun checkApiCall(file: File,apiCallList:List<ApiNode> ,resultList: Array
         return
     }
 
-    val path = file.absolutePath
-    val clazzName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."))
+    var clazzName = ""
     var method = ""
     val calls = INVOKE.getCalls()
     file.readLines().forEach { l ->
         val line = l.trim()
+        // 记录 method
+        if (line.startsWith(".class")) {
+            clazzName = line.substring(".class".length, line.length).replace("/", ".").trim()
+        }
         // 记录 method
         if (line.startsWith(".method")) {
             method = line.substring(".method".length, line.length).trim()
@@ -113,8 +125,7 @@ private fun checkApiCall(file: File,apiCallList:List<ApiNode> ,resultList: Array
                 val callMethod = getMethodName(line.split("->")[1].trim())
                 // 判断调用方法是否在 apiCall 中
                 val result = apiCallList.find { it.clazz == callClazz }?.method?.find { it == callMethod }
-                if (!result.isNullOrEmpty()){
-                    println("clazz=$clazzName method=$method call=$callClazz.$callMethod")
+                if (!result.isNullOrEmpty()) {
                     resultList.add(ApiCallResult(clazzName, method, callClazz, callMethod))
                 }
             }
