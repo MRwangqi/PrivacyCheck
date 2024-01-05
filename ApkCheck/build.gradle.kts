@@ -5,7 +5,7 @@ plugins {
     application
 }
 
-group = "org.example"
+group = "com.apkcheck"
 version = "1.0.0"
 
 repositories {
