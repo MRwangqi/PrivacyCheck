@@ -5,7 +5,7 @@ plugins {
 }
 
 depConfig {
-    path = rootDir.absolutePath + File.separator + "api.json"
+    path = project.projectDir.absolutePath + "/src/main/assets/api.json"
 }
 
 android {
@@ -48,4 +48,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation project(":test")
+    implementation project(":RuntimeCheck")
 }

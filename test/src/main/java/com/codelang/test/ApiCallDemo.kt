@@ -20,8 +20,7 @@ class ApiCallDemo {
     fun method2(context: Context) {
         val telephonyManager: TelephonyManager =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        telephonyManager.getDeviceId()
-
+//        val id = telephonyManager.getDeviceId()
 
         context.packageManager.getInstalledPackages(0)
     }

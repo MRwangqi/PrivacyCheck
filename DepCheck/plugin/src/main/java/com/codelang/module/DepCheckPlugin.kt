@@ -49,7 +49,7 @@ class DepCheckPlugin : Plugin<Project> {
                     }
                     val configFile = File(configPath)
                     if (!configFile.exists()) {
-                        println("api.json 文件不存在")
+                        println("api.json 文件不存在:$configPath")
                         return@doLast
                     }
 

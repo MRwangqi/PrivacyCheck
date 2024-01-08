@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "PrivacyCheck"
@@ -19,3 +20,4 @@ includeBuild("./LintCheck")
 includeBuild("./ApkCheck")
 includeBuild("./DepCheck")
 
+include ':RuntimeCheck'
