@@ -1,0 +1,165 @@
+[
+  {
+    "clazz": "android.support.v4.app.ActivityCompat",
+    "method": [
+      "requestPermissions"
+    ]
+  },
+  {
+    "clazz": "androidx.core.app.ActivityCompat",
+    "method": [
+      "requestPermissions"
+    ]
+  },
+  {
+    "clazz": "android.telephony.TelephonyManager",
+    "method": [
+      "getDeviceId",
+      "getImei",
+      "getMeid",
+      "getSimSerialNumber",
+      "getSubscriberId",
+      "getLine1Number",
+      "getSimOperator",
+      "getNetworkOperator",
+      "getSimCountryIso",
+      "getCellLocation",
+      "getAllCellInfo",
+      "requestCellInfoUpdate",
+      "getServiceState"
+    ]
+  },
+  {
+    "clazz": "android.telephony.cdma.CdmaCellLocation",
+    "method": [
+      "getBaseStationId",
+      "getNetworkId"
+    ]
+  },
+  {
+    "clazz": "android.telephony.gsm.GsmCellLocation",
+    "method": [
+      "getCid",
+      "getLac"
+    ]
+  },
+  {
+    "clazz": "android.telephony.SmsManager",
+    "method": [
+      "sendTextMessageInternal",
+      "getDefault",
+      "sendTextMessageWithSelfPermissions",
+      "sendMultipartTextMessageInternal",
+      "sendDataMessage",
+      "sendDataMessageWithSelfPermissions"
+    ]
+  },
+  {
+    "clazz": "android.provider.Settings$Secure",
+    "method": [
+      "getString"
+    ]
+  },
+  {
+    "clazz": "android.provider.Settings$System",
+    "method": [
+      "getString"
+    ]
+  },
+  {
+    "clazz": "android.os.Build",
+    "method": [
+      "getSerial"
+    ]
+  },
+  {
+    "clazz": "android.app.admin.DevicePolicyManager",
+    "method": [
+      "getWifiMacAddress"
+    ]
+  },
+  {
+    "clazz": "android.content.ClipboardManager",
+    "method": [
+      "getPrimaryClip",
+      "setPrimaryClip"
+    ]
+  },
+  {
+    "clazz": "android.telephony.UiccCardInfo",
+    "method": [
+      "getIccId"
+    ]
+  },
+  {
+    "clazz": "com.android.id.impl.IdProviderImpl",
+    "method": [
+      "getUDID",
+      "getOAID",
+      "getVAID",
+      "getAAID"
+    ]
+  },
+  {
+    "clazz": "android.content.pm.PackageManager",
+    "method": [
+      "getInstalledPackages",
+      "getInstalledApplications"
+    ]
+  },
+  {
+    "clazz": "android.app.ApplicationPackageManager",
+    "method": [
+      "getInstalledPackages",
+      "getInstalledApplications",
+      "queryIntentActivities"
+    ]
+  },
+  {
+    "clazz": "android.app.ActivityManager",
+    "method": [
+      "getRunningAppProcesses",
+      "getRunningServiceControlPanel"
+    ]
+  },
+  {
+    "clazz": "android.location.LocationManager",
+    "method": [
+      "requestLocationUpdates",
+      "getLastKnownLocation",
+      "getBestProvider",
+      "getGnssHardwareModelName",
+      "getGnssYearOfHardware",
+      "getProvider",
+      "requestSingleUpdate",
+      "getCurrentLocation"
+    ]
+  },
+  {
+    "clazz": "android.location.Location",
+    "method": [
+      "getRunningAppProcesses",
+      "getRunningServiceControlPanel",
+      "getAccuracy",
+      "getAltitude",
+      "getBearing",
+      "getBearingAccuracyDegrees",
+      "getElapsedRealtimeNanos",
+      "getExtras",
+      "getLatitude",
+      "getLongitude",
+      "getProvider",
+      "getSpeed",
+      "getSpeedAccuracyMetersPerSecond",
+      "getTime",
+      "getVerticalAccuracyMeters"
+    ]
+  },
+  {
+    "clazz": "android.location.Geocoder",
+    "method": [
+      "getFromLocation",
+      "getFromLocationName"
+    ]
+  }
+]

@@ -8,6 +8,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main" }
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
@@ -16,8 +17,9 @@ dependencyResolutionManagement {
 rootProject.name = "PrivacyCheck"
 include ':app'
 include ':test'
-includeBuild("./LintCheck")
-includeBuild("./ApkCheck")
-includeBuild("./DepCheck")
-
 include ':RuntimeCheck'
+//includeBuild("./LintCheck")
+//includeBuild("./ApkCheck")
+//includeBuild("./DepCheck")
+
+

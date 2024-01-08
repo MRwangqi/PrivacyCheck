@@ -5,7 +5,14 @@ buildscript {
         lintVersion = '31.0.1'// AGP 8.0.1 -> lint 31.0.1
         kotlin_version = "1.8.20"
     }
+    repositories {
+        maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main" }
+    }
+    dependencies {
+        classpath "com.github.MRwangqi:uploadPlugin:1.0.0"
+    }
 }
+
 plugins {
     id 'com.android.application' version '8.0.1' apply false
     id 'com.android.library' version '8.0.1' apply false

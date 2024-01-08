@@ -1,7 +1,19 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+//    id 'uploadGithub'
 }
+
+//upload {
+//    // 必选
+//    groupId = "com.github.MRwangqi"
+//    // 必选
+//    artifactId = "lint"
+//    // 必选
+//    version = "1.0.0"
+//    sourceJar = false
+//    hasPomDepend = true
+//}
 
 android {
     namespace 'com.codelang.lint'
