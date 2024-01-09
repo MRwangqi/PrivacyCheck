@@ -25,16 +25,13 @@ idea 创建的 Console Application 项目
 ### 产出文件
 执行命令后会在当前目录 out/ApiCall.json，示例内容：
 ```json
-[
- {
-    "clazz": "TwilightManager",
-    "method": "private getLastKnownLocationForProvider(Ljava/lang/String;)Landroid/location/Location;",
-    "callClazz": "android.location.LocationManager",
-    "callMethod": "getLastKnownLocation"
-  }
-]
+{
+  "android.location.Location_getLatitude": [
+    {
+      "clazz": "Landroidx.appcompat.app.TwilightManager;",
+      "method": "private updateState(Landroid/location/Location;)V"
+    }
+  ]
+}
 ```
-- clazz:调用所在的类
-- method:调用所在的方法
-- callClazz:调用类
-- callMethod:调用方法
+该 json 描述的是，调用 Location.getLatitude 这个 Api 的地方在 TwilightManager 类的 updateState 方法

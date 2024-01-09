@@ -5,6 +5,7 @@ package com.codelang.runtimecheck
 import android.content.Context
 import android.util.Log
 import com.codelang.runtimecheck.bean.ApiNode
+import com.codelang.runtimecheck.bean.StackLog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import top.canyie.pine.Pine
@@ -15,8 +16,10 @@ import java.lang.reflect.Type
 
 object RuntimeCheck {
 
-    const val ASSET_FILE = "api.json"
+    private const val ASSET_FILE = "api.json"
     const val TAG = "RuntimeCheck"
+
+    val stackList = arrayListOf<StackLog>()
 
     // https://github.com/canyie/pine/blob/master/README_cn.md
     @JvmStatic
@@ -47,9 +50,11 @@ object RuntimeCheck {
     private fun hook(method: Method) {
         Pine.hook(method, object : MethodHook() {
             override fun beforeCall(callFrame: Pine.CallFrame) {
-                Log.e(
-                    TAG, "Pine hook method=$method",
-                    RuntimeException("stacktrace")
+                val stack = Log.getStackTraceString(RuntimeException("stacktrace"))
+                Log.e(TAG, "Pine hook method=$method$stack")
+
+                stackList.add(
+                    0, StackLog(System.currentTimeMillis(), method.toString(), stack)
                 )
             }
 

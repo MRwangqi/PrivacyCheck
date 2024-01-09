@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PrivacyCheck</string>
+    <string name="item_expand">点击 item 展开详细堆栈</string>
 </resources>
