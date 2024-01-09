@@ -6,6 +6,6 @@ import com.codelang.runtimecheck.RuntimeCheck
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        RuntimeCheck.init(this, true, "api.json")
+        RuntimeCheck.init(this, true)
     }
 }

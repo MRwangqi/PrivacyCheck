@@ -15,15 +15,16 @@ import java.lang.reflect.Type
 
 object RuntimeCheck {
 
+    const val ASSET_FILE = "api.json"
     const val TAG = "RuntimeCheck"
 
     // https://github.com/canyie/pine/blob/master/README_cn.md
     @JvmStatic
-    fun init(context: Context, debug: Boolean, assetFile: String) {
+    fun init(context: Context, debug: Boolean) {
         PineConfig.debug = debug // 是否debug，true会输出较详细log
         PineConfig.debuggable = debug // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
 
-        val apiJson = getApiJson(context, assetFile)
+        val apiJson = getApiJson(context, ASSET_FILE)
 
         apiJson.forEach { apiNode ->
             try {

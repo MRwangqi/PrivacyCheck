@@ -7,7 +7,7 @@ import java.io.File
 
 object FileUtils {
 
-    fun generatorFile(project: Project, analysisList: List<ApiCallResult>) {
+    fun generatorFile(project: Project, analysisList: Map<String,List<ApiCallResult>>) {
         val text = Gson().toJson(analysisList)
         if (!project.buildDir.exists()) {
             project.buildDir.mkdir()

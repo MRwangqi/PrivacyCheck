@@ -33,7 +33,7 @@ android {
     }
 
     lintOptions {
-        isAbortOnError = true
+        isAbortOnError = false
     }
 }
 

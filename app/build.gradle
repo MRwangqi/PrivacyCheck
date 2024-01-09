@@ -5,7 +5,7 @@ plugins {
 }
 
 depConfig {
-    path = project.projectDir.absolutePath + "/src/main/assets/api.json"
+    path = project.rootDir.absolutePath + "/test/api.json"
 }
 
 android {
@@ -48,6 +48,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation project(":test")
-//    implementation project(":RuntimeCheck")
-    implementation "com.github.MRwangqi:runtimecheck:1.0.0"
+    implementation project(":RuntimeCheck")
+//    implementation "com.github.MRwangqi:runtimecheck:1.0.0"
 }

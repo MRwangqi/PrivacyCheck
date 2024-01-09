@@ -64,7 +64,7 @@ fun main(args: Array<String>) {
 
     // 4、读取 smail 文件
     println("start smail...")
-    val resultList = arrayListOf<ApiCallResult>()
+    val resultList = hashMapOf<String,ArrayList<ApiCallResult>>()
     val files = arrayListOf<File>()
     dfsFile(smailDir, files)
     ThreadUtil.batchProcessList(files) {
@@ -95,7 +95,7 @@ private fun dfsFile(file: File, list: ArrayList<File>) {
     }
 }
 
-private fun checkApiCall(file: File, apiCallList: List<ApiNode>, resultList: ArrayList<ApiCallResult>) {
+private fun checkApiCall(file: File, apiCallList: List<ApiNode>, resultMap: HashMap<String,ArrayList<ApiCallResult>>) {
     if (!file.absolutePath.endsWith(".smali")) {
         return
     }
@@ -126,7 +126,13 @@ private fun checkApiCall(file: File, apiCallList: List<ApiNode>, resultList: Arr
                 // 判断调用方法是否在 apiCall 中
                 val result = apiCallList.find { it.clazz == callClazz }?.method?.find { it == callMethod }
                 if (!result.isNullOrEmpty()) {
-                    resultList.add(ApiCallResult(clazzName, method, callClazz, callMethod))
+                    val key = "${callClazz}_$callMethod"
+                    var list = resultMap[key]
+                    if (list.isNullOrEmpty()) {
+                        list = arrayListOf()
+                    }
+                    list.add(ApiCallResult(clazzName, method,))
+                    resultMap[key] = list
                 }
             }
         }

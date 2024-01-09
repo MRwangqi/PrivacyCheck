@@ -9,13 +9,12 @@ import org.objectweb.asm.tree.MethodInsnNode
 object AnalysisModule {
 
 
-    private val resultList = arrayListOf<ApiCallResult>()
-
+    private val resultMap = hashMapOf<String, ArrayList<ApiCallResult>>()
 
     fun analysis(
         clazzList: List<Clazz>,
         apiList: List<ApiNode>
-    ): List<ApiCallResult> {
+    ): Map<String, List<ApiCallResult>> {
 
         clazzList.forEach { clazz ->
             clazz.methods?.forEach {
@@ -36,7 +35,7 @@ object AnalysisModule {
             }
         }
 
-        return resultList
+        return resultMap
     }
 
     private fun checkApiCall(
@@ -48,15 +47,20 @@ object AnalysisModule {
     ) {
         val result = apiList.find { it.clazz == callClazz }?.method?.find { it == callName }
         if (!result.isNullOrEmpty()) {
-            resultList.add(
+            val key = "${callClazz}_$callName"
+
+            var list = resultMap[key]
+            if (list.isNullOrEmpty()) {
+                list = arrayListOf()
+            }
+            list.add(
                 ApiCallResult(
                     clazz.className ?: "",
                     method,
                     clazz.dep ?: "",
-                    callClazz,
-                    callName
                 )
             )
+            resultMap[key] = list
         }
     }
 
