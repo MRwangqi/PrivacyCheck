@@ -161,5 +161,134 @@
       "getFromLocation",
       "getFromLocationName"
     ]
+  },
+  {
+    "clazz": "android.hardware.Camera",
+    "method": [
+      "open"
+    ]
+  },
+  {
+    "clazz": "android.hardware.camera2.CameraManager",
+    "method": [
+      "openCamera"
+    ]
+  },
+  {
+    "clazz": "androidx.camera.core.ImageCapture",
+    "method": [
+      "takePicture"
+    ]
+  },
+  {
+    "clazz": "android.net.wifi.WifiInfo",
+    "method": [
+      "getMacAddress",
+      "getSSID",
+      "getBSSID"
+    ]
+  },
+  {
+    "clazz": "android.net.wifi.WifiManager",
+    "method": [
+      "getConnectionInfo",
+      "getConfiguredNetworks",
+      "getScanResults",
+      "getWifiState"
+    ]
+  },
+  {
+    "clazz": "java.net.InetAddress",
+    "method": [
+      "getHostAddress",
+      "getHostName",
+      "getAddress"
+    ]
+  },
+  {
+    "clazz": "java.net.Inet4Address",
+    "method": [
+      "getHostAddress"
+    ]
+  },
+  {
+    "clazz": "java.net.Inet6Address",
+    "method": [
+      "getHostAddress"
+    ]
+  },
+  {
+    "clazz": "java.net.NetworkInterface",
+    "method": [
+      "getHardwareAddress"
+    ]
+  },
+  {
+    "clazz": "android.net.NetworkInfo",
+    "method": [
+      "getType",
+      "getTypeName",
+      "getExtraInfo",
+      "isAvailable",
+      "isConnected"
+    ]
+  },
+  {
+    "clazz": "android.net.ConnectivityManager",
+    "method": [
+      "getActiveNetworkInfo"
+    ]
+  },
+  {
+    "clazz": "java.net.InetSocketAddress",
+    "method": [
+      "getHostAddress",
+      "getHostName",
+      "getAddress"
+    ]
+  },
+  {
+    "clazz": "android.bluetooth.BluetoothDevice",
+    "method": [
+      "getName",
+      "getAddress"
+    ]
+  },
+  {
+    "clazz": "android.bluetooth.BluetoothAdapter",
+    "method": [
+      "getName"
+    ]
+  },
+  {
+    "clazz": "java.io.RandomAccessFile",
+    "method": [
+      "<init>"
+    ]
+  },
+  {
+    "clazz": "java.io.File",
+    "method": [
+      "mkdirs",
+      "mkdir"
+    ]
+  },
+  {
+    "clazz": "android.media.MediaRecorder",
+    "method": [
+      "start"
+    ]
+  },
+  {
+    "clazz": "android.media.AudioRecord",
+    "method": [
+      "startRecording"
+    ]
+  },
+  {
+    "clazz": "android.hardware.SensorManager",
+    "method": [
+      "getSensorList"
+    ]
   }
 ]

@@ -8,6 +8,5 @@ open class BaseDetector : Detector() {
     override fun beforeCheckFile(context: Context) {
         super.beforeCheckFile(context)
         ApiConfig.init(context)
-        println(ApiConfig.getApiNode())
     }
 }

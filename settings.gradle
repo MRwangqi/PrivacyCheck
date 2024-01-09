@@ -18,8 +18,8 @@ rootProject.name = "PrivacyCheck"
 include ':app'
 include ':test'
 include ':RuntimeCheck'
-//includeBuild("./LintCheck")
-//includeBuild("./ApkCheck")
-//includeBuild("./DepCheck")
+includeBuild("./LintCheck")
+includeBuild("./ApkCheck")
+includeBuild("./DepCheck")
 
 

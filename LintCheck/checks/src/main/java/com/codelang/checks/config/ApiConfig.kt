@@ -12,11 +12,13 @@ object ApiConfig {
     private var apiNode: List<ApiNode> = arrayListOf()
 
     fun init(context: Context) {
-        val apiJson = File(context.project.dir.absolutePath + File.separator + API_JSON)
-        println(apiJson.absolutePath)
+        val apiJson = File(context.project.dir.parentFile,API_JSON)
+        println("lint 配置文件路径->"+apiJson.absolutePath)
         if (apiJson.exists() && apiJson.isFile) {
             val type: Type = object : TypeToken<List<ApiNode>>() {}.type
             apiNode = Gson().fromJson(apiJson.bufferedReader(), type)
+        }else{
+            println("lint 配置文件 api.json 不存在")
         }
     }
 

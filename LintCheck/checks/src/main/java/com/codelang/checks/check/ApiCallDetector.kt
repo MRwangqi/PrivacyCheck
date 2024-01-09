@@ -37,16 +37,15 @@ class ApiCallDetector : BaseDetector(), Detector.UastScanner {
     }
 
     override fun createUastHandler(context: JavaContext): UElementHandler? {
-        println("createUastHandler====")
         return ApiCallUastHandler(context)
     }
 
     private class ApiCallUastHandler(val context: JavaContext?) : UElementHandler() {
 
         override fun visitCallExpression(node: UCallExpression) {
-            println("ApiCallUastHandler====${node.resolve()}")
+//            println("ApiCallUastHandler====${node.resolve()}")
             if (node.isMethodCall()) {
-                println("ApiCallUastHandler====${node.resolve()?.containingClass?.qualifiedName}  -> ${node.methodName}")
+//                println("ApiCallUastHandler====${node.resolve()?.containingClass?.qualifiedName}  -> ${node.methodName}")
                 ApiConfig.getApiNode().find {
                     context?.evaluator?.isMemberInClass(node.resolve(), it.clazz) == true
                             && it.method.find { m -> m == node.methodName } != null
