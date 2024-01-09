@@ -47,5 +47,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // lint
-    implementation("com.github.MRwangqi:lint:1.0.0")
+    implementation("com.github.MRwangqi:lint:1.0.1")
 }

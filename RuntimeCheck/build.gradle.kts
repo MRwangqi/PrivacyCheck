@@ -5,11 +5,8 @@ plugins {
 }
 
 //upload {
-//    // 必选
 //    groupId = "com.github.MRwangqi"
-//    // 必选
 //    artifactId = "runtimecheck"
-//    // 必选
 //    version = "1.0.0"
 //    sourceJar = false
 //    hasPomDepend = true
