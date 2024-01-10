@@ -20,6 +20,9 @@ object FridaManager {
 
     private var stackLogList = arrayListOf<StackLog>()
 
+
+    // https://blog.51cto.com/u_15127527/4546627
+    // https://frida.re/docs/frida-cli/
     @JvmStatic
     fun init(context: Application) {
         this.context = context
