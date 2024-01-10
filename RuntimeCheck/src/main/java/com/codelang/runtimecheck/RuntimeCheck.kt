@@ -50,16 +50,24 @@ object RuntimeCheck {
     private fun hook(method: Method) {
         Pine.hook(method, object : MethodHook() {
             override fun beforeCall(callFrame: Pine.CallFrame) {
-                val stack = Log.getStackTraceString(RuntimeException("stacktrace"))
-                Log.e(TAG, "Pine hook method=$method$stack")
-
-                stackList.add(
-                    0, StackLog(System.currentTimeMillis(), method.toString(), stack)
-                )
+                addStackLog(method.declaringClass.name, method.name)
             }
 
             override fun afterCall(callFrame: Pine.CallFrame) {}
         })
+    }
+
+    fun addStackLog(callClazz: String, callMethod: String) {
+        val currentTime = System.currentTimeMillis()
+        val stack = Log.getStackTraceString(java.lang.RuntimeException("stacktrace"))
+        val m = "$callClazz.$callMethod"
+        var str =
+            (">>>>>> pid:${android.os.Process.myPid()}, thread(id:${android.os.Process.myTid()}, name:${Thread.currentThread().name}), timestamp:$currentTime\n");
+        str += m + "\n"
+        str += stack
+        stackList.add(0,StackLog(currentTime, m, str))
+
+        Log.e(TAG, str)
     }
 
 
