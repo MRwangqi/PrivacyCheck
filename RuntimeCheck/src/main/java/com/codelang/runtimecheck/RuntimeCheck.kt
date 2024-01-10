@@ -64,8 +64,11 @@ object RuntimeCheck {
         var str =
             (">>>>>> pid:${android.os.Process.myPid()}, thread(id:${android.os.Process.myTid()}, name:${Thread.currentThread().name}), timestamp:$currentTime\n");
         str += m + "\n"
-        str += stack
-        stackList.add(0,StackLog(currentTime, m, str))
+        str += stack.split("\n").mapIndexed { index, s ->
+            if (index < 6) "" else s // 去掉堆栈中 Pine 相关的无效信息
+        }.filter { it.isNotEmpty() }.joinToString("\n")
+
+        stackList.add(0, StackLog(currentTime, m, str))
 
         Log.e(TAG, str)
     }
@@ -77,3 +80,6 @@ object RuntimeCheck {
         return Gson().fromJson(file.bufferedReader(), type)
     }
 }
+
+
+

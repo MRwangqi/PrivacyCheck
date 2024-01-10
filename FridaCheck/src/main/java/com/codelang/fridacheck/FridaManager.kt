@@ -90,6 +90,8 @@ object FridaManager {
 
     /**
      * 加载 gadget so 库
+     *
+     * 这里的 so 走本地路径而不是放置在 lib/armeabi/ 目录，是因为 config.so 使用的 script，path 没办法指定路径
      */
     @JvmStatic
     private fun loadGadget(context: Context) {
@@ -116,7 +118,10 @@ object FridaManager {
         var str =
             (">>>>>> pid:${android.os.Process.myPid()}, thread(id:${android.os.Process.myTid()}, name:${Thread.currentThread().name}), timestamp:$currentTime\n");
         str += m + "\n"
-        str += stack
+        str += stack.split("\n").mapIndexed { index, s ->
+            if (index < 2) "" else s // 去掉堆栈中 addStackLog 本身
+        }.filter { it.isNotEmpty() }.joinToString("\n")
+
         stackLogList.add(0,StackLog(currentTime, m, str))
 
         Log.e(TAG, str)
