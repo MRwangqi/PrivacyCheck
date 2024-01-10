@@ -96,7 +96,7 @@ object FridaManager {
 
 
     /**
-     * from frida.json call
+     * call from frida.js
      */
     @JvmStatic
     fun getApiJson(): String {
@@ -104,7 +104,7 @@ object FridaManager {
     }
 
     /**
-     * from frida.json call
+     * call from frida.js
      */
     @JvmStatic
     fun addStackLog(callClazz: String, callMethod: String) {

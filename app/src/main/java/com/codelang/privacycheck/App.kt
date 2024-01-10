@@ -7,7 +7,7 @@ import com.codelang.runtimecheck.RuntimeCheck
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-//        RuntimeCheck.init(this, true)
+        RuntimeCheck.init(this, true)
 
         FridaManager.init(this)
     }
