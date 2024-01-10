@@ -2,7 +2,6 @@
 
 const LOG_TAG = "Frida";
 
-
 function doHook(className, methodName) {
     var Log = Java.use("android.util.Log");
     try {
@@ -36,16 +35,16 @@ function doHook(className, methodName) {
 
 if (Java.available) {
     Java.perform(function () {
-        startTime = Date.now();
+        var startTime = Date.now();
         var Log = Java.use("android.util.Log");
         try {
-            Log.v(LOG_TAG, "init - " + Process.getCurrentThreadId());
+            Log.v(LOG_TAG, "init  " + Process.getCurrentThreadId());
             if (Process.getCurrentThreadId() != Process.id) {
                 return;
             }
 
             var currentTime = new Date().getTime();
-            Log.v(LOG_TAG, "inject start >> " + currentTime);
+            Log.v(LOG_TAG, "inject start >> ");
 
             var fridaManager = Java.use("com.codelang.fridacheck.FridaManager");
             var jsonObj = JSON.parse(fridaManager.getApiJson());
@@ -54,11 +53,11 @@ if (Java.available) {
                 var clazz = jsonObj[item]["clazz"]
                 var methods = jsonObj[item]["method"]
                 for(var m in methods){
-                     Log.e(LOG_TAG, clazz + " : " + methods[m]);
+//                     Log.e(LOG_TAG, clazz + " : " + methods[m]);
                      doHook(clazz, methods[m]);
                 }
             }
-            Log.v(LOG_TAG, "inject end >> " + (new Date().getTime() - currentTime));
+            Log.v(LOG_TAG, "inject end cost time >> " + (new Date().getTime() - currentTime)+"ms");
         } catch (e) {
             Log.e(LOG_TAG, e.toString());
         }

@@ -7,13 +7,12 @@ import com.codelang.fridacheck.bean.StackLog
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.RuntimeException
-import java.util.Date
 
 object FridaManager {
 
     private const val TAG = "FridaManager"
 
-    private const val JS_FILE_NAME = "frida.js"
+    private const val JS_FILE_NAME = "script.js"
     private const val GADGET_FILE_NAME = "libgadget"
     private const val API_JSON_FILE_NAME = "api.json"
 
