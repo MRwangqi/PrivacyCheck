@@ -18,7 +18,7 @@ object FridaManager {
 
     private var context: Application? = null
 
-    private var stackLogList = arrayListOf<StackLog>()
+    var stackLogList = arrayListOf<StackLog>()
 
 
     // https://blog.51cto.com/u_15127527/4546627

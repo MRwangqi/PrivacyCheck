@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.codelang.fridacheck.FridaManager
 import com.codelang.privacycheck.R
 import com.codelang.runtimecheck.RuntimeCheck
 import com.codelang.runtimecheck.bean.StackLog
@@ -21,6 +22,8 @@ class ApkCheckActivity : AppCompatActivity() {
 
         val rv = findViewById<RecyclerView>(R.id.rvList)
         rv.layoutManager = LinearLayoutManager(this)
+
+        // or   FridaManager.stackLogList
         rv.adapter = ApkCheckAdapter(RuntimeCheck.stackList)
     }
 
