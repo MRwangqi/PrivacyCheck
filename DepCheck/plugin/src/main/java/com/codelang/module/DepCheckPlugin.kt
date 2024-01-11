@@ -44,12 +44,12 @@ class DepCheckPlugin : Plugin<Project> {
 
                     val configPath = depCheckExtension.path
                     if (configPath.isEmpty()) {
-                        println("请配置 api.json 文件路径")
+                        println("请配置隐私合规配置文件路径")
                         return@doLast
                     }
                     val configFile = File(configPath)
                     if (!configFile.exists()) {
-                        println("api.json 文件不存在:$configPath")
+                        println("隐私合规配置文件不存在:$configPath")
                         return@doLast
                     }
 

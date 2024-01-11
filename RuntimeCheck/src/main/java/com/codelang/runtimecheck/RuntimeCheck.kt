@@ -16,16 +16,18 @@ import java.lang.reflect.Type
 
 object RuntimeCheck {
 
-    private const val ASSET_FILE = "api.json"
-    const val TAG = "RuntimeCheck"
+    private const val ASSET_FILE = "privacy_api.json"
+    private const val TAG = "RuntimeCheck"
 
-    val stackList = arrayListOf<StackLog>()
+    private var stackLogListener: StackLogListener? = null
+    private var isDebug = false
 
     // https://github.com/canyie/pine/blob/master/README_cn.md
     @JvmStatic
-    fun init(context: Context, debug: Boolean) {
-        PineConfig.debug = debug // 是否debug，true会输出较详细log
-        PineConfig.debuggable = debug // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
+    fun init(context: Context, isDebug: Boolean) {
+        this.isDebug = isDebug
+        PineConfig.debug = isDebug // 是否debug，true会输出较详细log
+        PineConfig.debuggable = isDebug // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
 
         val apiJson = getApiJson(context, ASSET_FILE)
 
@@ -41,7 +43,7 @@ object RuntimeCheck {
                     }
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(TAG, "api not found class ${apiNode.clazz} ${e.message}")
             }
         }
     }
@@ -57,7 +59,22 @@ object RuntimeCheck {
         })
     }
 
-    fun addStackLog(callClazz: String, callMethod: String) {
+
+    /**
+     * 注册 stack log 监听
+     */
+    fun registerStackLog(listener: StackLogListener) {
+        this.stackLogListener = listener
+    }
+
+    /**
+     * 反注册
+     */
+    fun unregisterStackLog() {
+        this.stackLogListener = null
+    }
+
+    private fun addStackLog(callClazz: String, callMethod: String) {
         val currentTime = System.currentTimeMillis()
         val stack = Log.getStackTraceString(java.lang.RuntimeException("stacktrace"))
         val m = "$callClazz.$callMethod"
@@ -68,9 +85,9 @@ object RuntimeCheck {
             if (index < 6) "" else s // 去掉堆栈中 Pine 相关的无效信息
         }.filter { it.isNotEmpty() }.joinToString("\n")
 
-        stackList.add(0, StackLog(currentTime, m, str))
+        this.stackLogListener?.onStackLog(StackLog(currentTime, m, str))
 
-        Log.e(TAG, str)
+        log(str)
     }
 
 
@@ -79,6 +96,17 @@ object RuntimeCheck {
         val type: Type = object : TypeToken<List<ApiNode>>() {}.type
         return Gson().fromJson(file.bufferedReader(), type)
     }
+
+
+    private fun log(msg: String) {
+        if (isDebug) {
+            Log.e(TAG, msg)
+        }
+    }
+}
+
+interface StackLogListener {
+    fun onStackLog(stackLog: StackLog)
 }
 
 

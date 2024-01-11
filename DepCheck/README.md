@@ -9,7 +9,7 @@ plugins {
 
 // 配置文件路径
 depConfig {
-    path = rootDir.absolutePath + File.separator + "api.json"
+    path = rootDir.absolutePath + File.separator + "privacy_api.json"
 }
 ```
 

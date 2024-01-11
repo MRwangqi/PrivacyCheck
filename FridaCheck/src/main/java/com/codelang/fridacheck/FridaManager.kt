@@ -1,3 +1,5 @@
+@file:JvmName("FridaManager")
+
 package com.codelang.fridacheck
 
 import android.app.Application
@@ -14,21 +16,35 @@ object FridaManager {
 
     private const val JS_FILE_NAME = "script.js"
     private const val GADGET_FILE_NAME = "libgadget"
-    private const val API_JSON_FILE_NAME = "api.json"
+    private const val API_JSON_FILE_NAME = "privacy_api.json"
 
     private var context: Application? = null
-
-    var stackLogList = arrayListOf<StackLog>()
-
+    private var stackLogListener: StackLogListener? = null
+    private var isDebug = false
 
     // https://blog.51cto.com/u_15127527/4546627
     // https://frida.re/docs/frida-cli/
     @JvmStatic
-    fun init(context: Application) {
+    fun init(context: Application, isDebug: Boolean) {
+        this.isDebug = isDebug
         this.context = context
         writeJSToCacheFile(context)
         writeGadgetToCacheFile(context)
         loadGadget(context)
+    }
+
+    /**
+     * 注册 stack log 监听
+     */
+    fun registerStackLog(listener: StackLogListener) {
+        this.stackLogListener = listener
+    }
+
+    /**
+     * 反注册
+     */
+    fun unregisterStackLog() {
+        this.stackLogListener = null
     }
 
 
@@ -122,9 +138,9 @@ object FridaManager {
             if (index < 2) "" else s // 去掉堆栈中 addStackLog 本身
         }.filter { it.isNotEmpty() }.joinToString("\n")
 
-        stackLogList.add(0,StackLog(currentTime, m, str))
+        stackLogListener?.onStackLog(StackLog(currentTime, m, str))
 
-        Log.e(TAG, str)
+        log(str)
     }
 
     @JvmStatic
@@ -132,4 +148,15 @@ object FridaManager {
         val file = File(context.applicationInfo.nativeLibraryDir)
         return file.name == "arm64"
     }
+
+
+    private fun log(msg: String) {
+        if (isDebug) {
+            Log.e(TAG, msg)
+        }
+    }
+}
+
+interface StackLogListener {
+    fun onStackLog(stackLog: StackLog)
 }

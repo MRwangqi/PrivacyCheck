@@ -8,7 +8,7 @@ import java.io.File
 import java.lang.reflect.Type
 
 object ApiConfig {
-    private const val API_JSON = "api.json"
+    private const val API_JSON = "privacy_api.json"
     private var apiNode: List<ApiNode> = arrayListOf()
 
     fun init(context: Context) {
@@ -18,7 +18,7 @@ object ApiConfig {
             val type: Type = object : TypeToken<List<ApiNode>>() {}.type
             apiNode = Gson().fromJson(apiJson.bufferedReader(), type)
         }else{
-            println("lint 配置文件 api.json 不存在")
+            println("lint 配置文件 privacy_api.json 不存在")
         }
     }
 

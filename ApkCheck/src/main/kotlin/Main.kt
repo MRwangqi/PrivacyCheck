@@ -10,7 +10,7 @@ import kotlin.concurrent.thread
 
 // 打包命令 ./gradlew assemble
 // 产物输出：/build/distributions/xxx.tar
-// 产物 cli 执行: sh bin/xx.sh xxx.apk api.json
+// 产物 cli 执行: sh bin/xx.sh xxx.apk privacy_api.json
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
         throw InvalidParameterException("未配置 apk 路径")
@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
 
     val configFile = File(args[1])
     if (!configFile.exists()) {
-        throw InvalidParameterException("配置文件不存在")
+        throw InvalidParameterException("隐私合规配置文件不存在")
     }
 
     val type: Type = object : TypeToken<List<ApiNode>>() {}.type
@@ -49,9 +49,9 @@ fun main(args: Array<String>) {
         ?.apply { println(map { it.absolutePath }) }
 
     // 3、 执行 baksmali 生成 smail 文件
-    val smailDir = File("out/smail")
+    val smailDir = File("out/smali")
     smailDir.mkdirs()
-    println("start baksmail...")
+    println("start baksmali...")
     ThreadUtil.batchProcessList(dexList ?: arrayListOf()) {
         it.forEach {
             // java -jar baksmali-2.5.2.jar d -o dir classes.dex
@@ -63,7 +63,7 @@ fun main(args: Array<String>) {
     startTime = System.currentTimeMillis()
 
     // 4、读取 smail 文件
-    println("start smail...")
+    println("start smali...")
     val resultList = hashMapOf<String,ArrayList<ApiCallResult>>()
     val files = arrayListOf<File>()
     dfsFile(smailDir, files)
@@ -73,7 +73,7 @@ fun main(args: Array<String>) {
         }
     }
     costTime = System.currentTimeMillis() - startTime
-    println("end smail cost ${costTime}ms")
+    println("end smali cost ${costTime}ms")
 
     // result output
     val apiFile = File("out", "ApiCall.json")

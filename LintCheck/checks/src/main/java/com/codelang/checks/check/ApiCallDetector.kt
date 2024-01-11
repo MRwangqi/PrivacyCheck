@@ -20,7 +20,7 @@ class ApiCallDetector : BaseDetector(), Detector.UastScanner {
 
     companion object {
         private const val REPORT_MESSAGE =
-            "禁止调用 api.json 描述的方法"
+            "禁止调用隐私合规配置文件 privacy_api.json 中描述的方法"
         val ISSUE = Issue.create(
             "ApiCheck",
             REPORT_MESSAGE,
