@@ -45,4 +45,4 @@ depConfig {
   ]
 }
 ```
-该 json 文件描述的是，在 TwilightManager 类的 updateState 方法有调用 Location.getLatitude 这个隐私 Api
+该 json 文件描述的是，在 appcompat 依赖中， TwilightManager 类的 updateState 方法有调用 Location.getLatitude 这个隐私 Api
