@@ -1,4 +1,4 @@
-Console Application 项目
+Java Console Application Project
 
 ## 一、使用
 
@@ -31,7 +31,7 @@ Console Application 项目
 - 产物输出：/build/distributions/xxx.tar
 - 解压产物，执行 cli 命令:  sh bin/xx.sh /user/xx/xxx.apk /user/xx/privacy_api.json
 
-### 2、应用执行流程:
+### 2、工具原理:
 1. 解压 apk 文件，找到 .dex 结尾的文件
 2. 执行 baksmali ，将 dex 文件转成 smali 文件
 3. 解析 smali 文件，检查 privacy_api.json 的调用情况

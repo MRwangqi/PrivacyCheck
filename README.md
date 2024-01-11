@@ -20,3 +20,4 @@
 - [Android App隐私合规检测辅助工具 Camille](https://github.com/zhengjim/camille)
 - [非root环境下frida的两种使用方式](https://nszdhd1.github.io/2021/06/15/%E9%9D%9Eroot%E7%8E%AF%E5%A2%83%E4%B8%8Bfrida%E7%9A%84%E4%B8%A4%E7%A7%8D%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/)
 - [Mobile Security Framework (MobSF)](https://github.com/MobSF/Mobile-Security-Framework-MobSF?tab=readme-ov-file#mobile-security-framework-mobsf)
+- [ART上的动态Java方法hook框架](https://blog.canyie.top/2020/04/27/dynamic-hooking-framework-on-art/)

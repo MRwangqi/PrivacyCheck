@@ -1,6 +1,5 @@
 ## 项目配置
 配置 maven 源与依赖
-配置依赖
 ```groovy
 buildscript {
     repositories {
@@ -11,8 +10,7 @@ buildscript {
     }
 }
 ```
-
-配置插件：
+apply 插件：
 ```groovy
 plugins {
     id 'com.android.application'
@@ -27,10 +25,10 @@ depConfig {
 ```
 
 执行命令：
-> ./gradlew depCheck -Pbuild=debug
+> ./gradlew depCheck -Pbuild=debug // -Pbuild=${build variant}
 
 
-生成文件：
+产物生成路径：
 > app/build/ApiCall.json
 
 产物说明:

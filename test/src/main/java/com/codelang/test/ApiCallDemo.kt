@@ -19,6 +19,9 @@ class ApiCallDemo {
         context.packageManager.getInstalledPackages(0)
     }
 
+
+
+
     fun method2(context: Context) {
         val telephonyManager: TelephonyManager =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
