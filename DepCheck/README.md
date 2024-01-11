@@ -1,6 +1,5 @@
 ## 项目配置
 配置 maven 源与依赖
-```
 配置依赖
 ```groovy
 buildscript {
