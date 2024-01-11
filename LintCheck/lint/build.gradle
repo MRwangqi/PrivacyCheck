@@ -6,8 +6,8 @@ plugins {
 
 //upload {
 //    groupId = "com.github.MRwangqi"
-//    artifactId = "lint"
-//    version = "1.0.1"
+//    artifactId = "privacy-lint"
+//    version = "1.0.0"
 //    sourceJar = false
 //    hasPomDepend = true
 //}

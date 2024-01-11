@@ -1,4 +1,4 @@
-## 配置
+## 项目配置
 
 ```
 plugins {
@@ -7,9 +7,9 @@ plugins {
     id 'depCheck'
 }
 
-// 配置文件路径
+// 配置隐私合规文件的绝对路径
 depConfig {
-    path = rootDir.absolutePath + File.separator + "privacy_api.json"
+    path = project.rootDir.absolutePath + File.separator + "privacy_api.json"
 }
 ```
 
@@ -19,3 +19,17 @@ depConfig {
 
 生成文件：
 > app/build/ApiCall.json
+
+产物说明:
+```json
+{
+  "android.location.Location_getLatitude": [
+    {
+      "clazz": "androidx/appcompat/app/TwilightManager",
+      "method": "updateState",
+      "dep": "androidx.appcompat:appcompat:1.6.1"
+    }
+  ]
+}
+```
+该 json 文件描述的是，在 TwilightManager 类的 updateState 方法有调用 Location.getLatitude 这个隐私 Api
