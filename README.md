@@ -1,7 +1,7 @@
 # 隐私 api 调用检查全套工具
 
 说明：
-- 以下所有工具都需要搭配 privacy_api.json 文件进行检查，文件内的隐私合规 api 参考来自开源项目 [Camille](https://github.com/zhengjim/camille)，也欢迎大家贡献隐私合规 api。
+- 以下所有工具都需要搭配 [privacy_api.json](privacy_api.json) 文件进行检查，文件内的隐私合规 api 参考来自开源项目 [Camille](https://github.com/zhengjim/camille)，也欢迎大家贡献隐私合规 api。
 
 
 静态检查工具：
