@@ -1,7 +1,7 @@
 ## 接入方式
 
 ### 1、添加 maven 源：
-```json
+```groovy
 dependencyResolutionManagement {
     repositories {
         maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main" }

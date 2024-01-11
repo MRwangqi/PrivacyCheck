@@ -1,14 +1,20 @@
 ## 项目配置
-配置 maven 源
-```json
-dependencyResolutionManagement {
-  repositories {
-      maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main"}
-  }
+配置 maven 源与依赖
+```
+配置依赖
+```groovy
+buildscript {
+    repositories {
+        maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main" }
+    }
+    dependencies {
+        classpath "com.github.MRwangqi:depCheckPlugin:1.0.0"
+    }
 }
 ```
+
 配置插件：
-```
+```groovy
 plugins {
     id 'com.android.application'
     // 配置插件

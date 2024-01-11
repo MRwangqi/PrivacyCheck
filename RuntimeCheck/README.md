@@ -2,7 +2,7 @@
 
 ### 1、添加 maven 源：
 
-```json
+```groovy
 dependencyResolutionManagement {
   repositories {
      maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main"}
@@ -16,9 +16,12 @@ dependencyResolutionManagement {
 
 ### 3、初始化：
 
-> RuntimeCheck.init(this, true)
+```kotlin
+RuntimeCheck.init(this, true)
+```
 
-监听隐私 api 的调用情况
+
+### 4、监听隐私 api 的调用情况
 
 ```kotlin
   RuntimeCheck.registerStackLog(object : com.codelang.runtimecheck.StackLogListener {
@@ -28,11 +31,11 @@ dependencyResolutionManagement {
 })
 ```
 
-### 4、添加混淆规则：
+### 5、添加混淆规则：
 
 > -keep class com.codelang.runtimecheck.bean.**{*;}
 
-### 5、隐私 api 更新
+### 6、隐私 api 更新
 
 该模块在 assets 目录默认内置了一份隐私合规 api 的 privacy_api.json 文件，如果未来隐私 api
 文件需要更新，可以自己重新创建一份 privacy_api.json 文件，然后放到 app 模块的 assets
