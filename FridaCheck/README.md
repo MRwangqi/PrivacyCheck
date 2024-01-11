@@ -5,12 +5,8 @@
 ```json
 dependencyResolutionManagement {
   repositories {
-  maven {
-  url
-  "https://raw.githubusercontent.com/MRwangqi/Maven/main"
-}
-//...
-}
+      maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main"}
+  }
 }
 ```
 

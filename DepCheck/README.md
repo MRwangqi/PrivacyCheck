@@ -1,5 +1,13 @@
 ## 项目配置
-
+配置 maven 源
+```json
+dependencyResolutionManagement {
+  repositories {
+      maven { url "https://raw.githubusercontent.com/MRwangqi/Maven/main"}
+  }
+}
+```
+配置插件：
 ```
 plugins {
     id 'com.android.application'
