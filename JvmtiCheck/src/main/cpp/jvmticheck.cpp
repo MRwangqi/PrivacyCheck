@@ -21,7 +21,12 @@ jvmtiEnv *CreateJvmtiEnv(JavaVM *vm) {
     return jvmti_env;
 }
 
-
+void SetAllCapabilities(jvmtiEnv *jvmti) {
+    jvmtiCapabilities caps;
+    jvmtiError error;
+    error = jvmti->GetPotentialCapabilities(&caps);
+    error = jvmti->AddCapabilities(&caps);
+}
 
 void MethodEntry(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread, jmethodID method) {
     char *name = NULL;
@@ -39,6 +44,7 @@ void MethodEntry(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread, jmethodID
 
     char *classSign = NULL;
     jvmti_env->GetClassSignature(clazz, &classSign, nullptr);
+
 
     if (!strcmp(name, "setText")) {
         ALOGI("==========触发 MethodEntry 线程名%s class=%s 方法名=%s%s =======", tinfo.name ,classSign,name, signature);
@@ -61,6 +67,7 @@ extern "C" JNIEXPORT jint JNICALL Agent_OnAttach(JavaVM *vm, char *options, void
         return JNI_ERR;
     }
     localJvmtiEnv = jvmti_env;
+    SetAllCapabilities(jvmti_env);
 
     jvmtiEventCallbacks callbacks;
     memset(&callbacks, 0, sizeof(callbacks));
