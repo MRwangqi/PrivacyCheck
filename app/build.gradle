@@ -55,4 +55,5 @@ dependencies {
     implementation "com.github.MRwangqi:fridacheck:1.0.0"
     implementation("com.github.MRwangqi:privacy-lint:1.0.0")
 
+    implementation project(":JvmtiCheck")
 }
