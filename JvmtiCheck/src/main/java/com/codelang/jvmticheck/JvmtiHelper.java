@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class JvmtiHelper {
-    private static String packageCodePath = "";
 
     public static final String TAG = "jvmti";
 
@@ -22,7 +21,6 @@ public class JvmtiHelper {
     public static void init(Context context) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                packageCodePath = context.getPackageCodePath();
                 ClassLoader classLoader = context.getClassLoader();
                 Log.d("jvmtiagentlibpath", "classLoader " + classLoader);
                 Method findLibrary = ClassLoader.class.getDeclaredMethod("findLibrary", String.class);
