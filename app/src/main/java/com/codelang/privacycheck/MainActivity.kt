@@ -26,17 +26,8 @@ class MainActivity : AppCompatActivity() {
 
         // query
         findViewById<View>(R.id.btnQuery).setOnClickListener {
-            startActivity(Intent(this, ApkCheckActivity::class.java) )
             JvmtiHelper.init(this)
+            startActivity(Intent(this, ApkCheckActivity::class.java) )
         }
-
-
-        val classLoader: ClassLoader = getClassLoader()
-        Log.d("MainActivity", "classLoader $classLoader")
-        val findLibrary =
-            ClassLoader::class.java.getDeclaredMethod("findLibrary", String::class.java)
-        val jvmtiAgentLibPath = findLibrary.invoke(classLoader, "jvmticheck")
-        //copy lib to /data/data/com.dodola.jvmti/files/jvmti
-        Log.d("MainActivity", "jvmtiagentlibpath $jvmtiAgentLibPath")
     }
 }

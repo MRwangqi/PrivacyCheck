@@ -3,6 +3,7 @@ package com.codelang.jvmticheck;
 import android.content.Context;
 import android.os.Build;
 import android.os.Debug;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -61,4 +62,12 @@ public class JvmtiHelper {
     }
 
     public static native String stringFromJNI();
+
+
+    public static void printLog(String className, String methodName, String methodDesc) {
+
+        if (TextUtils.equals(methodName,"setText")) {
+            Log.e(TAG, "JvmtiHelper printLog className:" + className + ",methodName:" + methodName + ",methodDesc:" + methodDesc);
+        }
+    }
 }
