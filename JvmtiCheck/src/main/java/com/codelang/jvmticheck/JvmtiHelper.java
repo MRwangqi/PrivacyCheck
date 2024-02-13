@@ -1,25 +1,41 @@
 package com.codelang.jvmticheck;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Debug;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.codelang.jvmticheck.bean.ApiNode;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import kotlin.text.Charsets;
 
 public class JvmtiHelper {
 
     public static final String TAG = "jvmti";
-
-
     private static final String LIB_NAME = "jvmticheck";
 
+    private static final String ASSET_FILE = "privacy_api.json";
+    private static Application context;
 
-    public static void init(Context context) {
+    public static void init(Application context) {
+        JvmtiHelper.context = context;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 ClassLoader classLoader = context.getClassLoader();
@@ -66,8 +82,30 @@ public class JvmtiHelper {
 
     public static void printLog(String className, String methodName, String methodDesc) {
 
-        if (TextUtils.equals(methodName,"setText")) {
+        if (TextUtils.equals(methodName, "setText") || TextUtils.equals(methodName, "methodName")) {
             Log.e(TAG, "JvmtiHelper printLog className:" + className + ",methodName:" + methodName + ",methodDesc:" + methodDesc);
+        }
+    }
+
+    /**
+     * call jni
+     */
+    public static Map<String, List<String>> getPrivacyData() {
+        if (context == null) return new HashMap<>();
+        try {
+            InputStream inputStream = context.getAssets().open(ASSET_FILE);
+            Type type = new TypeToken<List<ApiNode>>() {
+            }.getType();
+            List<ApiNode> list = new Gson().fromJson(new InputStreamReader(inputStream, Charsets.UTF_8), type);
+
+            Map<String, List<String>> map = new HashMap<>();
+            for (ApiNode apiNode : list) {
+                map.put(apiNode.getClazz(), apiNode.getMethod());
+            }
+            Log.i(TAG, "getPrivacyData: "+map);
+            return map;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

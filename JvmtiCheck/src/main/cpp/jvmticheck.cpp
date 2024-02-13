@@ -2,6 +2,7 @@
 #include <string>
 #include <android/log.h>
 #include "jvmti.h"
+#include <map>
 
 #define LOG_TAG "jvmti"
 #define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
@@ -10,21 +11,8 @@
 #define ALOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-static jvmtiEnv *localJvmtiEnv;
 
-
-//void printClasNAme(JNIEnv* env,jclass targetClass) {
-//    // Find the java/lang/Class class
-//    jclass classClass = (env)->FindClass( "java/lang/Class");
-//    // Find the getName method
-//    jmethodID getNameMethod = (env)->GetMethodID( classClass, "getName", "()Ljava/lang/String;");
-//    // Call the getName method on the Class object
-//    jstring className = (jstring)(env)->CallObjectMethod( targetClass, getNameMethod);
-//    const char *cClassName = (env)->GetStringUTFChars( className, NULL);
-//
-//    // Print the class name
-//    ALOGI("Class Name: %s\n", cClassName);
-//}
+void initPrivacy(JavaVM *vm, jvmtiEnv *jvmti_env);
 
 jvmtiEnv *CreateJvmtiEnv(JavaVM *vm) {
     jvmtiEnv *jvmti_env;
@@ -62,8 +50,8 @@ void MethodEntry(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread, jmethodID
     jvmti_env->GetClassSignature(clazz, &classSign, nullptr);
 
 
-
-    if (!strcmp(methodName, "printLog") &&!strcmp(classSign, "Lcom/codelang/jvmticheck/JvmtiHelper;")) {
+    if (!strcmp(methodName, "printLog") &&
+        !strcmp(classSign, "Lcom/codelang/jvmticheck/JvmtiHelper;")) {
 //        ALOGI("==========触发 printLog 线程名%s class=%s 方法名=%s%s =======", tinfo.name,
 //              classSign, methodName, methodSign);
         // todo 避免 printLog 方法的死循环
@@ -116,13 +104,16 @@ void SetEventNotification(jvmtiEnv *jvmti, jvmtiEventMode mode,
     jvmtiError err = jvmti->SetEventNotificationMode(mode, event_type, nullptr);
 }
 
+
 extern "C" JNIEXPORT jint JNICALL Agent_OnAttach(JavaVM *vm, char *options, void *reserved) {
     jvmtiEnv *jvmti_env = CreateJvmtiEnv(vm);
 
     if (jvmti_env == nullptr) {
         return JNI_ERR;
     }
-    localJvmtiEnv = jvmti_env;
+    // 初始化隐私合规
+    initPrivacy(vm, jvmti_env);
+
     SetAllCapabilities(jvmti_env);
 
     jvmtiEventCallbacks callbacks;
@@ -145,9 +136,48 @@ extern "C" JNIEXPORT jint JNICALL Agent_OnAttach(JavaVM *vm, char *options, void
                          JVMTI_EVENT_CLASS_FILE_LOAD_HOOK);
     SetEventNotification(jvmti_env, JVMTI_ENABLE,
                          JVMTI_EVENT_METHOD_ENTRY);
-    ALOGI("==========Agent_OnAttach=======22222");
+    ALOGI("==========Agent_OnAttach=======");
     return JNI_OK;
 }
+
+void initPrivacy(JavaVM *vm, jvmtiEnv *jvmti_env) {
+
+    // 获取当前线程
+    JNIEnv *env;
+    jint result = vm->GetEnv((void **) &env, JNI_VERSION_1_6);
+    if (result != JNI_OK) {
+        return;
+    }
+    jclass threadClass = env->FindClass("java/lang/Thread");
+    jmethodID currentThreadMethod = env->GetStaticMethodID(threadClass, "currentThread",
+                                                           "()Ljava/lang/Thread;");
+    jobject threadObj = env->CallStaticObjectMethod(threadClass, currentThreadMethod);
+    jthread currentThread = env->NewGlobalRef(threadObj);
+
+    jvmtiThreadInfo tinfo;
+    jvmti_env->GetThreadInfo(currentThread, &tinfo);
+    ALOGI("========== Agent_OnAttach 线程名%s  =======", tinfo.name);
+
+    // 在 boot classloader 中，使用上下文类加载器加载应用的 class
+    // Class.forName("com/codelang/jvmticheck/JvmtiHelper",true,contextClassLoader)
+    jstring className = env->NewStringUTF("com.codelang.jvmticheck.JvmtiHelper");
+    jclass currentClass = (env)->FindClass("java/lang/Class");
+    jmethodID jmethodId = env->GetStaticMethodID(currentClass, "forName",
+                                                 "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+    jclass cls = (jclass) env->CallStaticObjectMethod(currentClass, jmethodId,
+                                                      className,
+                                                      JNI_FALSE,
+                                                      tinfo.context_class_loader);
+
+
+    jmethodID privacyData = env->GetStaticMethodID(cls, "getPrivacyData", "()Ljava/util/Map;");
+    jobject mapObj = env->CallStaticObjectMethod(cls, privacyData);
+
+}
+
+
+
+
 
 
 
