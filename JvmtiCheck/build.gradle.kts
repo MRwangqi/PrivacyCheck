@@ -1,7 +1,16 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+//    id("uploadGithub")
 }
+
+//upload {
+//    groupId = "com.github.MRwangqi"
+//    artifactId = "jvmticheck"
+//    version = "1.0.0"
+//    sourceJar = false
+//    hasPomDepend = true
+//}
 
 android {
     namespace = "com.codelang.jvmticheck"

@@ -51,9 +51,11 @@ dependencies {
     implementation project(":test")
 //    implementation project(":RuntimeCheck")
 //    implementation project(":FridaCheck")
+//    implementation project(":JvmtiCheck")
     implementation "com.github.MRwangqi:runtimecheck:1.0.0"
     implementation "com.github.MRwangqi:fridacheck:1.0.0"
+    implementation 'com.github.MRwangqi:jvmticheck:1.0.0'
     implementation("com.github.MRwangqi:privacy-lint:1.0.0")
 
-    implementation project(":JvmtiCheck")
+
 }
