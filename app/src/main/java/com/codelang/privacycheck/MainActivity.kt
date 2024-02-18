@@ -1,9 +1,12 @@
 package com.codelang.privacycheck
 
+import android.Manifest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import com.codelang.jvmticheck.JvmtiHelper
 import com.codelang.privacycheck.activity.ApkCheckActivity
 import com.codelang.test.ApiCallDemo
 
@@ -25,6 +28,5 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnQuery).setOnClickListener {
             startActivity(Intent(this, ApkCheckActivity::class.java) )
         }
-
     }
 }

@@ -11,6 +11,7 @@
 动态检查工具:
 - [RuntimeCheck](./RuntimeCheck/README.md): 运行时的 AOP Hook
 - [FridaCheck](./FridaCheck/README.md):frida gadget hook
+- [JvmtiCheck](./JvmtiCheck/README.md):jvmti methodEntry 监听
 
 
 参考链接:
