@@ -87,7 +87,12 @@ void MethodEntry(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread, jmethodID
             if (!strcmp(vec[i].c_str(), methodName)) {
                 ALOGI("========== find MethodEntry 线程名%s class=%s 方法名=%s%s =======",
                       tinfo.name, extractClassName(classSign), methodName, methodSign);
-                // todo 打印堆栈信息
+                // 打印堆栈信息
+                jclass  throwable_class = jni_env->FindClass("java/lang/Throwable");
+                jmethodID  throwable_init = jni_env->GetMethodID(throwable_class, "<init>", "(Ljava/lang/String;)V");
+                jobject throwable_obj = jni_env->NewObject(throwable_class, throwable_init, jni_env->NewStringUTF("privacy api"));
+                jmethodID throwable_mid = jni_env->GetMethodID(throwable_class, "printStackTrace", "()V");
+                jni_env->CallVoidMethod(throwable_obj, throwable_mid);
                 break;
             }
         }
