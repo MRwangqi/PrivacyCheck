@@ -15,8 +15,6 @@ class ApiCallDemo {
             arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
             100
         )
-
-        context.packageManager.getInstalledPackages(0)
     }
 
 

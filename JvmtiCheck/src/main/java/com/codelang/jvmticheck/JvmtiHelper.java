@@ -80,15 +80,8 @@ public class JvmtiHelper {
     public static native String stringFromJNI();
 
 
-    public static void printLog(String className, String methodName, String methodDesc) {
-
-        if (TextUtils.equals(methodName, "setText") || TextUtils.equals(methodName, "methodName")) {
-            Log.e(TAG, "JvmtiHelper printLog className:" + className + ",methodName:" + methodName + ",methodDesc:" + methodDesc);
-        }
-    }
-
     /**
-     * call jni
+     * call from jni
      */
     public static Map<String, List<String>> getPrivacyData() {
         if (context == null) return new HashMap<>();
@@ -100,9 +93,8 @@ public class JvmtiHelper {
 
             Map<String, List<String>> map = new HashMap<>();
             for (ApiNode apiNode : list) {
-                map.put(apiNode.getClazz(), apiNode.getMethod());
+                map.put(apiNode.getClazz().replace(".","/"), apiNode.getMethod());
             }
-            Log.i(TAG, "getPrivacyData: "+map);
             return map;
         } catch (IOException e) {
             throw new RuntimeException(e);

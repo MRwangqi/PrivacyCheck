@@ -3,6 +3,7 @@
 #include <android/log.h>
 #include "jvmti.h"
 #include <map>
+#include <vector>
 
 #define LOG_TAG "jvmti"
 #define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
@@ -13,6 +14,36 @@
 
 
 void initPrivacy(JavaVM *vm, jvmtiEnv *jvmti_env);
+std::map<std::string, std::vector<std::string>> javaToMap(JNIEnv *env, jobject javaMap);
+static std::map<std::string, std::vector<std::string>> map;
+
+/**
+ * 从类签名中提取类名
+ * @param classSign  Lcom/codelang/jvmticheck/JvmtiHelper;
+ * @return  com/codelang/jvmticheck/JvmtiHelper
+ */
+char *extractClassName(char *classSign) {
+    char *classNameStart = NULL;
+    char *classNameEnd = NULL;
+    char *className = NULL;
+
+    // 查找 'L' 的位置
+    classNameStart = strchr(classSign, 'L');
+
+    if (classNameStart != NULL) {
+        classNameStart++; // 移动指针到类名的起始位置
+        classNameEnd = strchr(classNameStart, ';'); // 查找分号(';')
+
+        if (classNameEnd != NULL) {
+            // 提取所需的字符串
+            int charLength = classNameEnd - classNameStart;
+            className = (char *) malloc(charLength + 1); // 添加额外的位置用于字符串终止符
+            strncpy(className, classNameStart, charLength);
+            className[charLength] = '\0'; // 手动添加字符串终止符
+        }
+    }
+    return className;
+}
 
 jvmtiEnv *CreateJvmtiEnv(JavaVM *vm) {
     jvmtiEnv *jvmti_env;
@@ -29,8 +60,6 @@ void SetAllCapabilities(jvmtiEnv *jvmti) {
     error = jvmti->GetPotentialCapabilities(&caps);
     error = jvmti->AddCapabilities(&caps);
 }
-
-static jclass clsJvmtiHelper;
 
 void MethodEntry(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread, jmethodID method) {
     char *methodName = NULL;
@@ -50,51 +79,18 @@ void MethodEntry(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread, jmethodID
     jvmti_env->GetClassSignature(clazz, &classSign, nullptr);
 
 
-    if (!strcmp(methodName, "printLog") &&
-        !strcmp(classSign, "Lcom/codelang/jvmticheck/JvmtiHelper;")) {
-//        ALOGI("==========触发 printLog 线程名%s class=%s 方法名=%s%s =======", tinfo.name,
-//              classSign, methodName, methodSign);
-        // todo 避免 printLog 方法的死循环
-        return;
-    }
-
-    // todo 放开如下判断，会导致崩溃，应该是死循环问题，待解
-    // 在 setText 的时候再做 java 方法回调，MethodEntry 方法回调频次太高了，会导致卡顿
-    if (!strcmp(methodName, "setText") && !strcmp(classSign, "Landroid/widget/TextView;")) {
-        ALOGI("==========触发 MethodEntry 线程名%s class=%s 方法名=%s%s =======", tinfo.name,
-              classSign, methodName, methodSign);
-
-
-        if (clsJvmtiHelper == nullptr) {
-
-            // 在 boot classloader 中，使用上下文类加载器加载应用的 class
-            // Class.forName("com/codelang/jvmticheck/JvmtiHelper",true,contextClassLoader)
-            jstring className = jni_env->NewStringUTF("com.codelang.jvmticheck.JvmtiHelper");
-            jclass currentClass = (jni_env)->FindClass("java/lang/Class");
-            jmethodID jmethodId = jni_env->GetStaticMethodID(currentClass, "forName",
-                                                             "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
-            jclass cls = (jclass) jni_env->CallStaticObjectMethod(currentClass, jmethodId,
-                                                                  className,
-                                                                  JNI_FALSE,
-                                                                  tinfo.context_class_loader);
-            // 全局缓存 class
-            clsJvmtiHelper = (jclass) jni_env->NewGlobalRef(cls);
-
+    // 从集合中查找是否命中隐私 api
+    auto find = map.find(extractClassName(classSign));
+    if (find != map.end()) {
+        std::vector<std::string> vec = find->second;
+        for (int i = 0; i < vec.size(); i++) {
+            if (!strcmp(vec[i].c_str(), methodName)) {
+                ALOGI("========== find MethodEntry 线程名%s class=%s 方法名=%s%s =======",
+                      tinfo.name, extractClassName(classSign), methodName, methodSign);
+                // todo 打印堆栈信息
+                break;
+            }
         }
-
-        jmethodID mPrintLog = jni_env->GetStaticMethodID(clsJvmtiHelper, "printLog",
-                                                         "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-
-        jstring clsName = jni_env->NewStringUTF(classSign);
-        jstring mName = jni_env->NewStringUTF(methodName);
-        jstring mSign = jni_env->NewStringUTF(methodSign);
-        jni_env->CallStaticVoidMethod(clsJvmtiHelper, mPrintLog, clsName, mName, mSign);
-
-
-        jni_env->DeleteLocalRef(clsName);
-        jni_env->DeleteLocalRef(mName);
-        jni_env->DeleteLocalRef(mSign);
-
     }
 }
 
@@ -173,12 +169,61 @@ void initPrivacy(JavaVM *vm, jvmtiEnv *jvmti_env) {
     jmethodID privacyData = env->GetStaticMethodID(cls, "getPrivacyData", "()Ljava/util/Map;");
     jobject mapObj = env->CallStaticObjectMethod(cls, privacyData);
 
+
+    map = javaToMap(env, mapObj);
 }
 
 
+std::map<std::string, std::vector<std::string>> javaToMap(JNIEnv *env, jobject javaMap) {
+    std::map<std::string, std::vector<std::string>> cppMap;
 
+    jclass mapClass = env->GetObjectClass(javaMap);
+    jmethodID entrySetMethod = env->GetMethodID(mapClass, "entrySet", "()Ljava/util/Set;");
+    jclass setClass = env->FindClass("java/util/Set");
+    jmethodID iteratorMethod = env->GetMethodID(setClass, "iterator", "()Ljava/util/Iterator;");
+    jclass iteratorClass = env->FindClass("java/util/Iterator");
+    jmethodID nextMethod = env->GetMethodID(iteratorClass, "next", "()Ljava/lang/Object;");
 
+    jobject entrySet = env->CallObjectMethod(javaMap, entrySetMethod);
+    jobject iterator = env->CallObjectMethod(entrySet, iteratorMethod);
 
+    while (env->CallBooleanMethod(iterator, env->GetMethodID(iteratorClass, "hasNext", "()Z"))) {
+        jobject entry = env->CallObjectMethod(iterator, nextMethod);
+
+        jclass entryClass = env->GetObjectClass(entry);
+        jmethodID getKeyMethod = env->GetMethodID(entryClass, "getKey", "()Ljava/lang/Object;");
+        jmethodID getValueMethod = env->GetMethodID(entryClass, "getValue", "()Ljava/lang/Object;");
+
+        jstring key = (jstring) env->CallObjectMethod(entry, getKeyMethod);
+        jobject value = env->CallObjectMethod(entry, getValueMethod);
+
+        const char *keyStr = env->GetStringUTFChars(key, nullptr);
+
+        jclass listClass = env->GetObjectClass(value);
+        jmethodID listToArrayMethod = env->GetMethodID(listClass, "toArray",
+                                                       "()[Ljava/lang/Object;");
+        jobjectArray valueArray = (jobjectArray) env->CallObjectMethod(value, listToArrayMethod);
+
+        std::vector<std::string> cppVec;
+        jsize length = env->GetArrayLength(valueArray);
+        for (jsize i = 0; i < length; i++) {
+            jstring str = (jstring) env->GetObjectArrayElement(valueArray, i);
+            const char *valueStr = env->GetStringUTFChars(str, nullptr);
+            cppVec.push_back(std::string(valueStr));
+            env->ReleaseStringUTFChars(str, valueStr);
+            env->DeleteLocalRef(str);
+        }
+
+        cppMap[std::string(keyStr)] = cppVec;
+
+        env->ReleaseStringUTFChars(key, keyStr);
+        env->DeleteLocalRef(key);
+        env->DeleteLocalRef(value);
+        env->DeleteLocalRef(entry);
+    }
+
+    return cppMap;
+}
 
 
 extern "C" JNIEXPORT jstring JNICALL

@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         // query
         findViewById<View>(R.id.btnQuery).setOnClickListener {
-            JvmtiHelper.init(this.application)
             startActivity(Intent(this, ApkCheckActivity::class.java) )
         }
     }

@@ -2,6 +2,7 @@ package com.codelang.privacycheck
 
 import android.app.Application
 import com.codelang.fridacheck.FridaManager
+import com.codelang.jvmticheck.JvmtiHelper
 import com.codelang.runtimecheck.RuntimeCheck
 
 class App : Application() {
@@ -16,8 +17,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        initRuntimeCheck()
-        initFridaCheck()
+//        initRuntimeCheck() // todo 与 jvmtiCheck 不能同时使用
+//        initFridaCheck()
+        JvmtiHelper.init(this)
     }
 
     private fun initRuntimeCheck() {
