@@ -1,6 +1,6 @@
 ## 接入方式
 
-只适用 debugable 的应用
+只适用 debuggable 的应用
 
 ### 1、添加 maven 源：
 
