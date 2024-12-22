@@ -36,9 +36,11 @@ object UnzipUtils {
             val `in` = zip.getInputStream(entry)
             val outPath = (descDir +File.separator+ zipEntryName).replace("\\*".toRegex(), "/")
             //判断路径是否存在,不存在则创建文件路径
-            val file = File(outPath).parentFile
-            if (!file.exists()) {
+            val file = File(outPath)
+            if (file.isDirectory) {
                 file.mkdirs()
+            } else {
+                file.parentFile.mkdirs()
             }
             //判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压
             if (File(outPath).isDirectory) {
