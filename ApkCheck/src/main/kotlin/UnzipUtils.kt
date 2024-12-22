@@ -36,7 +36,7 @@ object UnzipUtils {
             val `in` = zip.getInputStream(entry)
             val outPath = (descDir +File.separator+ zipEntryName).replace("\\*".toRegex(), "/")
             //判断路径是否存在,不存在则创建文件路径
-            val file = File(outPath.substring(0, outPath.lastIndexOf('/')))
+            val file = File(outPath).parentFile
             if (!file.exists()) {
                 file.mkdirs()
             }
